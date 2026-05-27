@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>InterLink ITLG → ITL Calculator</title>
+<style>
+    body { font-family: Arial; background: #0f172a; color: white; padding: 20px; margin:0; }
+    .container { max-width: 620px; margin: 40px auto; background: #1e2937; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    input, select { padding: 12px; width: 100%; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; }
+    button { background: #6366f1; color: white; padding: 15px; font-size: 18px; border: none; border-radius: 8px; width: 100%; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #4f46e5; }
+    .result { margin-top: 20px; padding: 20px; background: #334155; border-radius: 10px; font-size: 20px; line-height: 1.5; }
+    h2 { text-align: center; color: #a5b4fc; margin-bottom: 5px; }
+    .note { text-align: center; font-size: 14px; color: #94a3b8; margin-bottom: 20px; }
+    .header { text-align: center; font-size: 24px; font-weight: bold; color: #22c55e; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">🚀 InterLink Official</div>
+    <h2>ITLG → ITL Staking Calculator</h2>
+    <p class="note">Exact ratios from latest official chart • Option 2</p>
+    
+    <label>How much ITLG are you staking?</label>
+    <input type="number" id="itlg" value="" placeholder="Enter your ITLG amount (e.g. 100000)">
+    
+    <label>Lock Period (Years):</label>
+    <select id="lock">
+        <option value="0">0 Years</option>
+        <option value="12">1 Year</option>
+        <option value="24">2 Years</option>
+        <option value="36">3 Years</option>
+        <option value="48">4 Years</option>
+        <option value="60">5 Years</option>
+    </select>
+    
+    <label>Vesting Period (Months):</label>
+    <select id="vest">
+        <option value="0">0 Months</option>
+        <option value="12">12 Months</option>
+        <option value="24">24 Months</option>
+        <option value="36">36 Months</option>
+        <option value="48">48 Months</option>
+        <option value="60">60 Months</option>
+        <option value="72">72 Months</option>
+        <option value="84">84 Months</option>
+        <option value="96">96 Months</option>
+        <option value="108">108 Months</option>
+        <option value="120">120 Months</option>
+    </select>
+    
+    <button onclick="calculate()">Calculate ITL</button>
+    
+    <div id="result" class="result" style="display:none;"></div>
+</div>
+
+<script>
+const data = {
+    0:   {0:160,12:130,24:105,36:85,48:70,60:60,72:52,84:46,96:41,108:38,120:36},
+    12:  {0:80,12:65,24:52.5,36:42.5,48:35,60:30,72:26,84:23,96:20.5,108:19,120:18},
+    24:  {0:40,12:32.5,24:26.25,36:21.25,48:17.5,60:15,72:13,84:11.5,96:10.25,108:9.5,120:9},
+    36:  {0:20,12:16.25,24:13.125,36:10.625,48:8.75,60:7.5,72:6.5,84:5.75,96:5.125,108:4.75,120:4.5},
+    48:  {0:10,12:8.125,24:6.563,36:5.313,48:4.375,60:3.75,72:3.25,84:2.875,96:2.563,108:2.375,120:2.25},
+    60:  {0:5,12:4.063,24:3.281,36:2.656,48:2.188,60:1.875,72:1.625,84:1.438,96:1.281,108:1.188,120:1.125}
+};
+
+function calculate() {
+    const itlg = parseFloat(document.getElementById('itlg').value);
+    const lockMonths = parseInt(document.getElementById('lock').value);
+    const vest = parseInt(document.getElementById('vest').value);
+    
+    if (!itlg || itlg <= 0) {
+        alert("Please enter a valid ITLG amount!");
+        return;
+    }
+    
+    if (!data[lockMonths] || data[lockMonths][vest] === undefined) {
+        alert("Invalid lock or vesting period selected.");
+        return;
+    }
+    
+    const ratio = data[lockMonths][vest];
+    const totalITL = itlg / ratio;
+    const lockYears = lockMonths / 12;
+    
+    let releaseHTML = '';
+    if (vest > 0) {
+        const monthlyITL = totalITL / vest;
+        releaseHTML = `<br><strong>Monthly Release:</strong> <span style="color:#22c55e;">${monthlyITL.toFixed(4)} ITL</span> per month <small>(for ${vest} months after lock ends)</small>`;
+    } else {
+        releaseHTML = `<br><strong>Release:</strong> Full amount released <span style="color:#22c55e;">immediately</span> after lock period ends`;
+    }
+    
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <strong>✅ Calculation Result:</strong><br><br>
+        ITLG Staked: <strong>${itlg.toLocaleString('en-IN')}</strong><br>
+        Lock Period: <strong>${lockYears} Year${lockYears !== 1 ? 's' : ''}</strong><br>
+        Vesting Period: <strong>${vest} Months</strong><br>
+        Conversion Ratio: <strong>${ratio} ITLG = 1 ITL</strong><br><br>
+        <span style="font-size:26px; color:#22c55e;">Total ITL you will receive: <strong>${totalITL.toFixed(4)} ITL</strong></span>
+        ${releaseHTML}
+    `;
+}
+</script>
+</body>
+</html>
