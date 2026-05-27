@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>InterLink ITLG → ITL Calculator</title>
+<title>ITLG → ITL Calculator</title>
 <style>
     body { font-family: Arial; background: #0f172a; color: white; padding: 20px; margin:0; }
     .container { max-width: 620px; margin: 40px auto; background: #1e2937; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     input, select { padding: 12px; width: 100%; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; }
-    button { background: #6366f1; color: white; padding: 15px; font-size: 18px; border: none; border-radius: 8px; width: 100%; cursor: pointer; margin-top: 10px; }
+    button { 
+        background: #6366f1; 
+        color: white; 
+        padding: 15px; 
+        font-size: 18px; 
+        border: none; 
+        border-radius: 8px; 
+        width: 100%; 
+        cursor: pointer; 
+        margin-top: 10px; 
+    }
     button:hover { background: #4f46e5; }
+    .clear-btn { background: #64748b; }
+    .clear-btn:hover { background: #475569; }
     .result { margin-top: 20px; padding: 20px; background: #334155; border-radius: 10px; font-size: 20px; line-height: 1.5; }
     h2 { text-align: center; color: #a5b4fc; margin-bottom: 5px; }
     .note { text-align: center; font-size: 14px; color: #94a3b8; margin-bottom: 20px; }
@@ -17,7 +29,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">🚀 InterLink Official</div>
+    <div class="header">🚀 Honest Critic</div>
     <h2>ITLG → ITL Staking Calculator</h2>
     <p class="note">Exact ratios from latest official chart • Option 2</p>
     
@@ -50,6 +62,7 @@
     </select>
     
     <button onclick="calculate()">Calculate ITL</button>
+    <button onclick="clearForm()" class="clear-btn">Clear Form</button>
     
     <div id="result" class="result" style="display:none;"></div>
 </div>
@@ -102,6 +115,13 @@ function calculate() {
         <span style="font-size:26px; color:#22c55e;">Total ITL you will receive: <strong>${totalITL.toFixed(4)} ITL</strong></span>
         ${releaseHTML}
     `;
+}
+
+function clearForm() {
+    document.getElementById('itlg').value = '';
+    document.getElementById('lock').value = '0';
+    document.getElementById('vest').value = '0';
+    document.getElementById('result').style.display = 'none';
 }
 </script>
 </body>
